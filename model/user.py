@@ -1,7 +1,8 @@
+from common.common import ecrypto_password
+
 from sqlalchemy import Column, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
-
 
 class User(Base):
     __tablename__ = 'users'
@@ -15,7 +16,7 @@ class User(Base):
 
     def __init__(self, email, password, token, name, bio, image):
         self.email = email
-        self.password = password
+        self.password =  ecrypto_password(password)
         self.token = token
         self.name = name
         self.bio = bio
