@@ -47,7 +47,7 @@ def test_make_user():
 
     assert user.email == email
     assert user.token == token
-    assert user.name == name
+    assert user.username == name
     assert user.bio == bio
     assert user.image == image_url
 

@@ -10,7 +10,7 @@ class User(Base):
     email = Column(String(50))
     password = Column(String(50))
     token = Column(String(50))
-    name = Column(String(50))
+    username = Column(String(50))
     bio = Column(Text)
     image = Column(String(50))
 
@@ -18,6 +18,6 @@ class User(Base):
         self.email = email
         self.password =  ecrypto_password(password)
         self.token = token
-        self.name = name
+        self.username = name
         self.bio = bio
         self.image = image
