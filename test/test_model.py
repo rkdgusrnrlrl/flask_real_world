@@ -25,7 +25,8 @@ def user(session):
     name = "HyeonKu Kang"
     bio = "bio"
     image_url = "https://avatars3.githubusercontent.com/u/11402853?s=460&v=4"
-    user = User(email, token, name, bio, image_url)
+    password ="password"
+    user = User(email, password, token, name, bio, image_url)
 
     session.add(user)
     return user
@@ -41,13 +42,29 @@ def test_make_user():
     name = "HyeonKu Kang"
     bio = "bio"
     image_url = "https://avatars3.githubusercontent.com/u/11402853?s=460&v=4"
-    user = User(email, token, name, bio, image_url)
+    password ="password"
+    user = User(email, password, token, name, bio, image_url)
 
     assert user.email == email
     assert user.token == token
     assert user.name == name
     assert user.bio == bio
-    assert user.image_url == image_url
+    assert user.image == image_url
+
+def test_make_user():
+    email = "email@gmail.com"
+    token = "token"
+    name = "HyeonKu Kang"
+    bio = "bio"
+    image_url = "https://avatars3.githubusercontent.com/u/11402853?s=460&v=4"
+    password = "password"
+    user = User(email, password, token, name, bio, image_url)
+
+    assert user.email == email
+    assert user.token == token
+    assert user.name == name
+    assert user.bio == bio
+    assert user.image == image_url
 
 def test_find_user(session, user):
     some_user = session.query(User).filter_by(email="email@gmail.com").first()
