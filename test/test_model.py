@@ -29,7 +29,8 @@ def user(session):
     user = User(email, password, token, name, bio, image_url)
 
     session.add(user)
-    assert user.uid == ""
+    session.commit()
+
     return user
 
 
