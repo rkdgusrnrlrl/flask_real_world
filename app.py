@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model.user import Base, User
-
+from common.common import make_token
 
 app = Flask(__name__)
 
@@ -23,7 +23,8 @@ def register_user():
 
     user = User(email=payload["email"],
                 password=payload["password"],
-                username=payload["username"])
+                username=payload["username"],
+                token=make_token())
 
     session.add(user)
     session.commit()

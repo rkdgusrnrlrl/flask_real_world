@@ -27,3 +27,5 @@ def test_register_user(client):
     assert "bio" in data_dict
     assert "image" in data_dict
     assert "token" in data_dict
+    assert data_dict["token"] != ""
+

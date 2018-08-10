@@ -1,6 +1,5 @@
 import bcrypt
-import json
-
+import uuid
 
 def ecrypto_password(password):
     hash = bcrypt.hashpw(
@@ -29,3 +28,6 @@ def to_dict(inst, cls):
         else:
             d[c.name] = v
     return d
+
+def make_token():
+    return str(uuid.uuid4()).replace("-", "")
