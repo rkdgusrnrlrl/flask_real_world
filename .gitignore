@@ -1,2 +1,4 @@
 .idea/
 realworld.db
+**/.pytest_cache/
+venv/
