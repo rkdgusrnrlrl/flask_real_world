@@ -1,5 +1,4 @@
 from exception.invalid_token import InvalidToken
-import pytest
 import json
 
 
@@ -52,3 +51,38 @@ def test_invalid_token(client):
     data_dict = response.get_json()
     assert "message" in data_dict
     assert InvalidToken.message == data_dict["message"]
+
+
+def test_login(client, user):
+    data = json.dumps({
+        "user": {
+            "email": user.email,
+            "password": "password",
+        }
+    })
+    response = client.post("/users/login", data=data, content_type="application/json")
+    assert response.status_code == 200
+
+    data_dict = response.get_json()
+
+    assert "email" in data_dict
+    assert "username" in data_dict
+    assert "bio" in data_dict
+    assert "image" in data_dict
+    assert "token" in data_dict
+    assert data_dict["token"] != ""
+
+
+def test_login_wrong_password_should_be_not_found_user(client, user):
+    data = json.dumps({
+        "user": {
+            "email": user.email,
+            "password": "password1",
+        }
+    })
+    response = client.post("/users/login", data=data, content_type="application/json")
+    assert response.status_code == 500
+
+    data_dict = response.get_json()
+
+    assert "message" in data_dict

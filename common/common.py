@@ -1,12 +1,14 @@
 import bcrypt
 import uuid
 
+
 def ecrypto_password(password):
-    hash = bcrypt.hashpw(
+    hashed = bcrypt.hashpw(
         password.encode("utf-8"),
         bcrypt.gensalt()
     )
-    return hash.decode("utf-8")
+    return hashed.decode("utf-8")
+
 
 def to_dict(inst, cls):
     """
@@ -29,5 +31,10 @@ def to_dict(inst, cls):
             d[c.name] = v
     return d
 
+
 def make_token():
     return str(uuid.uuid4()).replace("-", "")
+
+
+def check_password(raw, hashed):
+    return bcrypt.checkpw(raw.encode("utf-8"), hashed.encode("utf-8"))

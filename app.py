@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify, g
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from model.user import Base, User
-from common.common import make_token
+from common.common import make_token, check_password
 from functools import wraps
 from exception.invalid_token import InvalidToken
+from exception.not_found_user import NotFoundUser
 
 import re
 
@@ -19,6 +20,13 @@ session = Session()
 
 @app.errorhandler(InvalidToken)
 def hadle_invalid_token(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+
+@app.errorhandler(NotFoundUser)
+def hadle_not_found_user(error):
     response = jsonify(error.to_dict())
     response.status_code = error.status_code
     return response
@@ -74,3 +82,14 @@ def register_user():
 @token_need
 def about_me():
     return jsonify(g.user.to_dict())
+
+
+@app.route("/users/login", methods=["POST"])
+def login():
+    payload = request.get_json()["user"]
+    password = payload['password']
+    user = session.query(User).filter_by(email=payload["email"]).first()
+    if not check_password(password, user.password):
+        raise NotFoundUser()
+
+    return jsonify(user.to_dict())

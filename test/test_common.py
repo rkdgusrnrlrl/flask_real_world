@@ -1,4 +1,4 @@
-from common.common import make_token
+from common.common import make_token, check_password, ecrypto_password
 import re
 
 
@@ -17,3 +17,10 @@ def test_regex():
 
     token = match.group(1)
     assert token == "123"
+
+
+def test_check_password():
+    raw = "password"
+    hashed = ecrypto_password(raw)
+
+    assert check_password(raw, hashed)
