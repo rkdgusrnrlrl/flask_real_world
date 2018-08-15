@@ -1,10 +1,9 @@
 from common.common import ecrypto_password, to_dict
 
 from sqlalchemy import Column, Integer, String, Text
-from sqlalchemy.ext.declarative import declarative_base
-Base = declarative_base()
+from extensions import db
 
-class User(Base):
+class User(db.Base):
     __tablename__ = 'users'
     uid = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(50))

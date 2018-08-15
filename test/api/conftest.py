@@ -1,14 +1,19 @@
 import pytest
-from app import app, session, User
+from app import create_app
+from settings import TestConfig, DevConfig
 from common.common import make_token
+from extensions import db
+from model.user import User
 
-@pytest.fixture
+@pytest.fixture(scope="class")
 def client():
-    return app.test_client()
+    app = create_app(DevConfig)
+    yield app.test_client()
+    db.session.remove()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def user():
+@pytest.fixture(scope="function")
+def user(client):
     email = "email@gmail.com"
     name = "HyeonKu Kang22"
     password = "password"
@@ -17,7 +22,6 @@ def user():
                 username=name,
                 token=make_token())
 
-    session.add(user)
-    session.commit()
-
-    return user
+    db.session.add(user)
+    yield user
+    db.session.rollback()

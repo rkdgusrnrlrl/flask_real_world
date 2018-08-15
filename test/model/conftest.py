@@ -1,34 +1,30 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from model.user import User
-from model.user import Base
+from extensions import db
+from settings import TestConfig
 import pytest
 
 
-@pytest.fixture(scope="session")
-def engine():
-    engine = create_engine('sqlite:///:memory:', echo=True)
-    Base.metadata.create_all(engine)
-    return engine
+@pytest.fixture(scope="class")
+def session():
+    db.init_engine(TestConfig)
+    db.init_model()
+    yield db.session
+    db.session.remove()
 
-@pytest.fixture(scope="session")
-def session(engine):
-    Session = sessionmaker(bind=engine)
-    Session.configure(bind=engine)
-    session = Session()
-    return session
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function")
 def user(session):
     email = "email@gmail.com"
     token = "token"
     name = "HyeonKu Kang"
     bio = "bio"
     image_url = "https://avatars3.githubusercontent.com/u/11402853?s=460&v=4"
-    password ="password"
-    user = User(email, password, token, name, bio, image_url)
+    password = "password"
+    user = User(email, password, name, token, bio, image_url)
+    all = session.query(User)
+    for u in all:
+        name = u.username
 
     session.add(user)
-    session.commit()
-
-    return user
+    yield user
+    session.rollback()
