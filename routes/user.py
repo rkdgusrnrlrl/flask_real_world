@@ -34,6 +34,18 @@ def about_me():
     return jsonify(g.user.to_dict())
 
 
+@blueprint.route("/user", methods=["PUT"])
+@token_need
+def update_me():
+    user_dict = request.get_json()["user"]
+    user = g.user
+
+    db.session.query(User).filter_by(email=user.email).update(user_dict)
+    db.session.commit()
+
+    return jsonify(dict({"user" : g.user.to_dict()}))
+
+
 @blueprint.route("/users/login", methods=["POST"])
 def login():
     payload = request.get_json()["user"]
