@@ -21,9 +21,6 @@ def user(session):
     image_url = "https://avatars3.githubusercontent.com/u/11402853?s=460&v=4"
     password = "password"
     user = User(email, password, name, token, bio, image_url)
-    all = session.query(User)
-    for u in all:
-        name = u.username
 
     session.add(user)
     yield user
